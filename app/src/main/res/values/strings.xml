@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WheelDemo</string>
+
+    <string name="no_measure_result">暂无测量结果</string>
+</resources>

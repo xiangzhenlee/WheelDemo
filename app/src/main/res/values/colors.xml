@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="white_8_alpha">#CCFFFFFF</color> <!--白色 0.8透明度-->
+    <color name="white_6_alpha">#99FFFFFF</color> <!--白色 0.6透明度-->
+    <color name="white_3_alpha">#4CFFFFFF</color> <!--白色 0.3透明度-->
+    <color name="yellow_1">#f59623</color>
+</resources>

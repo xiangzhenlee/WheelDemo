@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/ll_food_cal"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@color/yellow_1"
+        android:orientation="vertical">
+
+        <com.yushan.wheeldemo.weidgt.FoodCalView
+            android:id="@+id/fcv_food"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_no_measure_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:text="@string/no_measure_result"
+            android:textColor="@color/white_8_alpha"
+            android:textSize="16sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_food_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="----/--/--"
+        android:textColor="@color/yellow_1"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_date"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <com.yushan.wheeldemo.weidgt.DataWheelView
+            android:id="@+id/dwv_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/yellow_1" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="----/--/--"
+        android:textColor="@color/yellow_1"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <com.yushan.wheeldemo.weidgt.WeightWheelView
+            android:id="@+id/wwv_mater"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="----/--/--"
+        android:textColor="@color/yellow_1"
+        android:textSize="16sp" />
+
+
+</LinearLayout>
