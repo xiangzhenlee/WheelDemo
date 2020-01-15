@@ -273,12 +273,16 @@ public class DataWheelView extends View {
         int startX = (int) (paddingLeft + startOriganalX - barWidth / 2);
         int endY = defaultHeight;
 
-        if (onDateChangedListener != null) {
+        if (onDateChangedListener != null && !isFling && !isMove) {
             onDateChangedListener.dateWheelChanged(centerPosition);
         }
 
         drawCenterBar(canvas, endY);
-        for (int i = 0; i < refreshList.size(); i++) {
+        for (int i = centerPosition - 50; i < centerPosition + 50; i++) {
+
+            if (i >= refreshList.size() || i < 0) {
+                continue;
+            }
             float barHeight = 0;
             int startY = (int) (defaultHeight - bottom_view_height - barHeight);
 
@@ -290,16 +294,13 @@ public class DataWheelView extends View {
 
             //绘制下面的文字
             float bottomTextWidth = mTopTextPaint.measureText(drawText);
-            float bottomStartX = startX + barWidth / 2 - bottomTextWidth / 2;
+            float bottomStartX = startX + barWidth / 2 - bottomTextWidth / 2 - (barWidth + barInterval) * i;
             Rect rect = new Rect();
             mTopTextPaint.getTextBounds(refreshList.get(i).getDate(), 0, refreshList.get(i).getDate().length(), rect);
             float bottomStartY = defaultHeight - bottom_view_height + 10 + rect.height();//rect.height()是获取文本的高度;
 
-
             //绘制底部的文字
             drawText(canvas, drawText, bottomStartX, bottomStartY);
-
-            startX = startX - (barWidth + barInterval);
         }
     }
 

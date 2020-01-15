@@ -281,13 +281,18 @@ public class FoodCalView extends View {
         int startX = (int) (paddingLeft + startOriganalX - barWidth / 2);
         int endY = defaultHeight;
 
-        if (onFoodDateChangedListener != null) {
+        if (onFoodDateChangedListener != null && !isFling && !isMove) {
             onFoodDateChangedListener.dateWheelChanged(centerPosition);
         }
 
         drawBottomLine(canvas);
 
-        for (int i = 0; i < innerData.size(); i++) {
+        for (int i = centerPosition - 50; i < centerPosition + 50; i++) {
+
+            if (i >= innerData.size() || i < 0) {
+                continue;
+            }
+
             float barHeight = 0;
             if (scaleTimes != 0) {
                 float barValue;
@@ -304,27 +309,25 @@ public class FoodCalView extends View {
 
             //绘制下面的文字
             float bottomTextWidth = mTopTextPaint.measureText(innerData.get(i).date);
-            float bottomStartX = startX + barWidth / 2 - bottomTextWidth / 2;
+            float bottomStartX = startX + barWidth / 2 - bottomTextWidth / 2 - i * (barWidth + barInterval);
             Rect rect = new Rect();
             mTopTextPaint.getTextBounds(innerData.get(i).getDate(), 0, innerData.get(i).getDate().length(), rect);
             float bottomStartY = defaultHeight - bottom_view_height + 10 + rect.height();//rect.height()是获取文本的高度;
 
             //绘制线
-            drawBottomLine(canvas, startX + barWidth / 2, bottomStartY);
+            drawBottomLine(canvas, startX + barWidth / 2 - i * (barWidth + barInterval), bottomStartY);
 
             if (innerData.get(i).count != 0) {
                 //绘制bar
                 if (i == centerPosition) {
-                    drawCenterBar(canvas, startX, startY + dp2Px(30), endY);
+                    drawCenterBar(canvas, startX - i * (barWidth + barInterval), startY + dp2Px(30), endY);
                 } else {
-                    drawBar(canvas, startX, startY + dp2Px(30), endY);
+                    drawBar(canvas, startX - i * (barWidth + barInterval), startY + dp2Px(30), endY);
                 }
             }
 
             //绘制底部的文字
             drawTopText(canvas, innerData.get(i).getDate(), bottomStartX, bottomStartY);
-
-            startX = startX - (barWidth + barInterval);
         }
 
         drawCenterFlag(canvas, endY, dp2Px(6));

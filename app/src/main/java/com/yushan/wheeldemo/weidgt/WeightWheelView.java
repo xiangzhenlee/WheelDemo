@@ -69,7 +69,7 @@ public class WeightWheelView extends View {
     private int maxSize = 50 * 10;
     private Paint mCenterLinePaint;
     private int centerPosition;
-    private int refreshSize = 100;
+    private int refreshSize;
     private Matrix mMatrix;
     private Paint mBitmapPaint;
     private Paint mBarPaint;
@@ -159,9 +159,9 @@ public class WeightWheelView extends View {
 
     private void initBitmap() {
         // 创建Bitmap渲染对象
-        backgroundBitmap = drawable2Bitmap(getResources().getDrawable(R.mipmap.icon_food_fist));
-        middleBitmap = drawable2Bitmap(getResources().getDrawable(R.mipmap.bg_food_fist));
-        upBitmap = drawable2Bitmap(getResources().getDrawable(R.mipmap.icon_fist));
+        backgroundBitmap = drawable2Bitmap(getResources().getDrawable(R.drawable.icon_food_fist));
+        middleBitmap = drawable2Bitmap(getResources().getDrawable(R.drawable.bg_food_fist));
+        upBitmap = drawable2Bitmap(getResources().getDrawable(R.drawable.icon_fist));
 
         bitmapMin = Math.min(backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
     }
@@ -233,6 +233,15 @@ public class WeightWheelView extends View {
 
                     centerPosition = (int) (measureWidth / 2 - startOriganalX) / (barWidth + barInterval);
 
+                    if (centerPosition - 100 <= refreshSize) {
+                        Log.e("yushan", "refreshSize:" + refreshSize + "  maxSize:" + maxSize);
+                        if (refreshSize > 0) {
+                            refreshSize -= 50;
+                        } else {
+                            refreshSize = 0;
+                        }
+                    }
+
                 } else {//这是向右滑动
                     Log.e("TAG", "向左滑动");
                     if (Math.abs(startOriganalX) > getMoveLength() + (measureWidth + barInterval) / 2) {
@@ -241,9 +250,9 @@ public class WeightWheelView extends View {
 
                     centerPosition = (int) (measureWidth / 2 - startOriganalX) / (barWidth + barInterval);
 
-                    if (centerPosition > refreshSize - 75) {
+                    if (refreshSize + 200 - centerPosition  <= 100) {
                         Log.e("yushan", "refreshSize:" + refreshSize + "  maxSize:" + maxSize);
-                        if (refreshSize < maxSize && refreshSize % 10 == 0) {
+                        if (refreshSize < maxSize) {
                             refreshSize += 50;
                         } else {
                             refreshSize = maxSize;
@@ -287,6 +296,7 @@ public class WeightWheelView extends View {
         if (startOriganalX == 0) {
             startOriganalX = measureWidth / 2 - barWidth / 2;
         }
+
         int startX = (int) (paddingLeft + startOriganalX);
         int endY = defaultHeight - bottom_text_size;
 
@@ -297,48 +307,50 @@ public class WeightWheelView extends View {
             onWeightWheelChangedListener.weightWheelChanged(centerPosition);
         }
 
+        for (int i = refreshSize + 0; i <= refreshSize + 200; i++) {
 
-        for (int i = 0; i <= refreshSize; i++) {
+            if (i > maxSize) {
+                break;
+            }
 
             int startY = (int) (defaultHeight - bottom_view_height);
             //绘制下面的文字
             float bottomTextWidth = mBottomTextPaint.measureText(i / 10 + "");
-            float bottomStartX = startX + barWidth / 2 - bottomTextWidth / 2;
+            float bottomStartX = startX + (barWidth + barInterval) * i;
             Rect rect = new Rect();
             mBottomTextPaint.getTextBounds(i + "", 0, (i + "").length(), rect);
             float bottomStartY = defaultHeight;//rect.height()是获取文本的高度;
 
             if (i % 10 == 0) {
                 //绘制线
-                drawBottomLine(canvas, startX + barWidth / 2, bottomStartY - bottom_text_size, dp2Px(0));
+                drawBottomLine(canvas, bottomStartX + barWidth / 2, bottomStartY - bottom_text_size, dp2Px(0));
                 //绘制底部的文字
-                drawBottomText(canvas, i / 10 + "", bottomStartX, bottomStartY);
+                drawBottomText(canvas, i / 10 + "", bottomStartX - bottomTextWidth / 2, bottomStartY);
             } else if (i % 10 == 5) {
                 //绘制线
-                drawBottomLine(canvas, startX + barWidth / 2, bottomStartY - bottom_text_size, dp2Px(5));
+                drawBottomLine(canvas, bottomStartX + barWidth / 2, bottomStartY - bottom_text_size, dp2Px(5));
 
                 if (i / 10 < centerPosition / 10) {
                     middleBitmap = Bitmap.createScaledBitmap(middleBitmap, bitmapMin, bitmapMin, false);
-                    canvas.drawBitmap(drawFistImage(), startX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), null);
+                    canvas.drawBitmap(drawFistImage(), bottomStartX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), null);
                 } else if (i / 10 == centerPosition / 10) {
+
                     if (scale == 1.0f) {
-                        canvas.drawBitmap(upBitmap, startX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), mBarPaint);
+                        canvas.drawBitmap(upBitmap, bottomStartX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), mBarPaint);
                     } else {
                         middleBitmap = Bitmap.createScaledBitmap(middleBitmap, (int) (bitmapMin * scale), bitmapMin, false);
-                        canvas.drawBitmap(drawFistImage(), startX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), null);
-                        canvas.drawBitmap(upBitmap, startX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), mBarPaint);
+                        canvas.drawBitmap(drawFistImage(), bottomStartX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), null);
+                        canvas.drawBitmap(upBitmap, bottomStartX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), mBarPaint);
                     }
-
                 } else {
-                    canvas.drawBitmap(upBitmap, startX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), mBarPaint);
+                    canvas.drawBitmap(upBitmap, bottomStartX + barWidth / 2 - bitmapMin / 2, bottomStartY - bottom_text_size - dp2Px(60), mBarPaint);
                 }
 
             } else {
                 //绘制线
-                drawBottomLine(canvas, startX + barWidth / 2, bottomStartY - bottom_text_size, dp2Px(10));
+                drawBottomLine(canvas, bottomStartX + barWidth / 2, bottomStartY - bottom_text_size, dp2Px(10));
             }
 
-            startX = startX + barWidth + barInterval;
         }
 
         drawCenterLine(canvas, endY, dp2Px(0));
@@ -487,23 +499,34 @@ public class WeightWheelView extends View {
                     isBoundary = true;
                 }
 
+                centerPosition = (int) (measureWidth / 2 - startOriganalX) / (barWidth + barInterval);
+
+                if (centerPosition - 100 <= refreshSize) {
+                    Log.e("yushan", "refreshSize:" + refreshSize + "  maxSize:" + maxSize);
+                    if (refreshSize > 0) {
+                        refreshSize -= 50;
+                    } else {
+                        refreshSize = 0;
+                    }
+                }
+
             } else {//这是向右滑动
                 Log.e("TAG", "向左滑动");
                 if (Math.abs(startOriganalX) > getMoveLength() + (measureWidth + barInterval) / 2) {
                     startOriganalX = -(getMoveLength() + (measureWidth + barInterval) / 2);
                 }
 
-                if (centerPosition > refreshSize - 75) {
+                centerPosition = (int) (measureWidth / 2 - startOriganalX) / (barWidth + barInterval);
+
+                if (refreshSize + 200 - centerPosition  <= 100) {
                     Log.e("yushan", "refreshSize:" + refreshSize + "  maxSize:" + maxSize);
-                    if (refreshSize < maxSize && refreshSize % 10 == 0) {
+                    if (refreshSize < maxSize) {
                         refreshSize += 50;
                     } else {
                         refreshSize = maxSize;
                     }
                 }
             }
-
-            centerPosition = (int) (measureWidth / 2 - startOriganalX) / (barWidth + barInterval);
 
             if (centerPosition % 10 == 0) {
                 scale = 1.0f;
